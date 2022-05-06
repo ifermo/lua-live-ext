@@ -63,3 +63,14 @@ pub extern "C" fn deliver(data: *const c_uchar, len: usize) -> *mut c_char {
         .expect("nul error")
         .into_raw()
 }
+
+#[no_mangle]
+pub extern "C" fn echo(s: *const c_char) -> *mut c_char {
+    let c_str = unsafe {
+        assert!(!s.is_null());
+        CStr::from_ptr(s)
+    };
+    CString::new(c_str.to_str().expect("invalid utf-8"))
+        .unwrap()
+        .into_raw()
+}
